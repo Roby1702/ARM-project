@@ -26,7 +26,6 @@ Il progetto interagisce direttamente con le periferiche hardware a basso livello
 - [Come Compilare ed Eseguire](#-come-compilare-ed-eseguire)
 - [Autore](#-autore)
 
----
 
 ## ℹ️ Descrizione del Progetto
 
@@ -41,7 +40,7 @@ Il gioco si svolge in una sfida tra l'**Utente** ed un **BOT**.
 4. **Visualizzazione:** Le mosse (simboli `S`, `C`, `F`) appaiono sui primi due display a 7 segmenti (`HEX0` e `HEX1`), mentre il punteggio corrente compare su `HEX2` e `HEX3`.
 5. **Vittoria:** Il primo giocatore che raggiunge 3 punti vince la partita. Sul monitor VGA vengono aggiornate le vittorie complessive registrate.
 
----
+
 
 ## 🛠️ Mappatura Periferiche Hardware
 
@@ -99,7 +98,6 @@ valore_timer:
 * **`display_SCELTE`**: Carica i pattern dei segmenti in base alle mosse scritte in memoria e li invia a `HEX0` e `HEX1`.
 * **`display_PUNTEGGIO`**: Converte i punteggi numerici correnti e li invia a `HEX2` e `HEX3`.
 
----
 
 ## ⚙️ Come Compilare ed Eseguire
 
@@ -114,3 +112,10 @@ valore_timer:
 4. Compila e carica nella memoria del simulatore.
 5. Avvia l'esecuzione (`Run`).
 6. Imposta gli **Switch (SW0, SW1, SW2)** e premi `KEY0` per giocare.
+
+## 👨‍💻 Autore
+
+Progetto realizzato in **ARM Assembly** per il corso di studi in Ingegneria Informatica.
+
+* 💻 **GitHub:** [@Roby1702]([https://github.com/tuo-username](https://github.com/Roby1702))
+* 🌐 **LinkedIn:** [Roberto Barra]([https://linkedin.com/in/tuo-profilo](https://www.linkedin.com/in/robertobarra/))
