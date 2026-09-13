@@ -67,3 +67,15 @@ SCF:
     .word 0b01101101    // Codifica 7-segmenti per 'S' (Sasso)
     .word 0b00111001    // Codifica 7-segmenti per 'C' (Carta)
     .word 0b01110001    // Codifica 7-segmenti per 'F' (Forbici)
+
+2. Inizializzazione VGA Text Buffer
+La routine iniziale _start scrive direttamente nel character buffer della VGA (0xC9000000). Utilizzando la formula d'indirizzamento offset Offset = X + (Y * 128), vengono scritte le stringhe dell'interfaccia utente:
+
+Titoli delle scelte: SASSO, CARTA, FORBICI
+
+Punteggio e diciture: PUNTEGGIO:, GIOCATORE, BOT
+
+Istruzioni per i pulsanti (KEY0 per confermare, KEY1 per prossimo round, KEY2 per reset).
+
+3. Gestione Timer e Generazione Scelta BOT
+La routine timer inizializza il registro del Private Timer al valore massimo 0xFFFFFFFF facendolo decrementare continuamente:
