@@ -67,15 +67,50 @@ SCF:
     .word 0b01101101    // Codifica 7-segmenti per 'S' (Sasso)
     .word 0b00111001    // Codifica 7-segmenti per 'C' (Carta)
     .word 0b01110001    // Codifica 7-segmenti per 'F' (Forbici)
+```
+### 2. Inizializzazione VGA Text Buffer
+La routine iniziale `_start` scrive direttamente nel character buffer della VGA (`0xC9000000`). Utilizzando la formula d'indirizzamento offset `Offset = X + (Y * 128)`, vengono scritte le stringhe dell'interfaccia utente:
+* Titoli delle scelte: `SASSO`, `CARTA`, `FORBICI`
+* Punteggio e diciture: `PUNTEGGIO:`, `GIOCATORE`, `BOT`
+* Istruzioni per i pulsanti (`KEY0` per confermare, `KEY1` per prossimo round, `KEY2` per reset).
 
-2. Inizializzazione VGA Text Buffer
-La routine iniziale _start scrive direttamente nel character buffer della VGA (0xC9000000). Utilizzando la formula d'indirizzamento offset Offset = X + (Y * 128), vengono scritte le stringhe dell'interfaccia utente:
+### 3. Gestione Timer e Generazione Scelta BOT
+La routine `timer` inizializza il registro del Private Timer al valore massimo `0xFFFFFFFF` facendolo decrementare continuamente:
 
-Titoli delle scelte: SASSO, CARTA, FORBICI
+```assembly
+valore_timer:
+    LDR r1, =TIMER_VALUE
+    LDR r0, [r1]
+    AND r0, r0, #0xF    // Isola gli ultimi 4 bit del contatore (valori 0-15)
+    
+    CMP r0, #5
+    BLT scelta_sasso    // 0..4  -> Sasso (0)
+    CMP r0, #10
+    BLT scelta_carta    // 5..9  -> Carta (1)
+    CMP r0, #15
+    BLT scelta_forbici  // 10..14 -> Forbici (2)
 
-Punteggio e diciture: PUNTEGGIO:, GIOCATORE, BOT
+```
+### 4. Lettura Input e Logica di Gioco
+* **`lettura_input_GIOCATORE`**: Maschera i primi 3 bit degli switch (`0x7`) per determinare se il giocatore ha selezionato Sasso, Carta o Forbici.
+* **`vincitore`**: Confronta le scelte secondo le regole classiche (Sasso batte Forbici, Carta batte Sasso, Forbici batte Carta) e aggiorna i punteggi.
 
-Istruzioni per i pulsanti (KEY0 per confermare, KEY1 per prossimo round, KEY2 per reset).
+### 5. Visualizzazione su Display a 7 Segmenti
+* **`display_SCELTE`**: Carica i pattern dei segmenti in base alle mosse scritte in memoria e li invia a `HEX0` e `HEX1`.
+* **`display_PUNTEGGIO`**: Converte i punteggi numerici correnti e li invia a `HEX2` e `HEX3`.
 
-3. Gestione Timer e Generazione Scelta BOT
-La routine timer inizializza il registro del Private Timer al valore massimo 0xFFFFFFFF facendolo decrementare continuamente:
+---
+
+## ⚙️ Come Compilare ed Eseguire
+
+### Prerequisiti
+* **Intel FPGA Monitor Program** oppure il simulatore **CPUlator** (DE1-SoC System).
+* Toolchain **ARM GNU Toolchain**.
+
+### Passaggi
+1. Apri CPUlator o Altera Monitor Program e seleziona **ARMv7-A (DE1-SoC)**.
+2. Carica il file Black VGA ed esegui.
+3. Carica il file `ROCK-PAPER-SCISSORS.s`.
+4. Compila e carica nella memoria del simulatore.
+5. Avvia l'esecuzione (`Run`).
+6. Imposta gli **Switch (SW0, SW1, SW2)** e premi `KEY0` per giocare.
